@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تبيان | جدول المسائل والمقارنات الفقهية</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased min-h-screen flex flex-col justify-between selection:bg-amber-200 selection:text-amber-950">
+
+    <!-- شريط التنقل العلوي (نفس الهوية الموحدة بدون لوقو) -->
+    <header class="bg-white/95 backdrop-blur-md border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div>
+                <a href="index.html" class="block">
+                    <span class="text-2xl font-black text-amber-950 tracking-wide">تبيان</span>
+                    <span class="block text-xs text-stone-500 font-semibold">الموسوعة الفقهية الأكاديمية</span>
+                </a>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-8 font-semibold text-stone-600 text-sm">
+                <a href="index.html" class="hover:text-amber-900 transition">الرئيسية</a>
+                <a href="search.html" class="hover:text-amber-900 transition">البحث الفقهي</a>
+                <a href="table.html" class="text-amber-900 font-bold border-b-2 border-amber-800 pb-1">جدول المقارنات والمسائل</a>
+                <a href="dashboard.html" class="hover:text-amber-900 transition">لوحة المشرف</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <a href="search.html" class="bg-amber-900 hover:bg-amber-950 text-white px-5 py-2.5 rounded-xl font-bold shadow-sm transition text-sm">
+                    بحث في المسائل
+                </a>
+                <button id="mobile-menu-btn" aria-label="القائمة" class="md:hidden p-2 rounded-xl border border-stone-200 text-stone-700 hover:bg-stone-100 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- قائمة الجوال -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-stone-200 px-4 py-4 space-y-3 text-sm font-semibold text-stone-700">
+            <a href="index.html" class="block hover:text-amber-900 py-1.5">الرئيسية</a>
+            <a href="search.html" class="block hover:text-amber-900 py-1.5">البحث الفقهي</a>
+            <a href="table.html" class="block text-amber-900 font-bold py-1.5">جدول المقارنات والمسائل</a>
+            <a href="dashboard.html" class="block hover:text-amber-900 py-1.5">لوحة المشرف</a>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        
+        <!-- ترويسة الصفحة وأدوات الفلترة -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200/90 mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div>
+                    <span class="text-amber-800 text-xs font-bold uppercase tracking-widest bg-amber-100/80 px-3 py-1 rounded-md">المقارنة الفقهية</span>
+                    <h1 class="text-2xl sm:text-3xl font-black text-stone-900 mt-2">جدول المسائل والأقوال لكتاب الصلاة</h1>
+                    <p id="results-counter" class="text-stone-500 text-xs sm:text-sm mt-1">جاري تحميل المسائل من قاعدة البيانات...</p>
+                </div>
+
+                <!-- أدوات البحث والتصفية -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <!-- فلترة حسب الباب -->
+                    <select id="chapter-filter" class="px-4 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-sm font-semibold text-stone-700 focus:outline-none focus:border-amber-800 transition">
+                        <option value="all">جميع الأبواب الفقهية</option>
+                    </select>
+
+                    <!-- بحث نصي داخل الجدول -->
+                    <input type="text" id="table-search" placeholder="ابحث في المسألة، القول، أو الدليل..." class="px-4 py-2.5 bg-stone-50 border border-stone-300 rounded-xl text-sm focus:outline-none focus:border-amber-800 focus:bg-white transition w-full sm:w-72">
+                </div>
+            </div>
+        </div>
+
+        <!-- حاوية الجدول الفقهي -->
+        <div class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="bg-stone-900 text-stone-100 text-xs font-bold tracking-wider">
+                            <th class="py-4 px-6 w-1/5">الباب وعنوان المسألة</th>
+                            <th class="py-4 px-6 w-1/5">تحرير محل الخلاف</th>
+                            <th class="py-4 px-6 w-2/5">الأقوال الفقهية والأدلة وثمرتها</th>
+                            <th class="py-4 px-6 w-1/5">القول الراجح وسبب الخلاف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fiqh-table-body" class="divide-y divide-stone-200 text-sm">
+                        <!-- تُعبأ ديناميكياً من data.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- التذييل (Footer) -->
+    <footer class="bg-stone-900 text-stone-400 border-t border-stone-800 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-sm gap-2">
+            <p>منصة <span class="font-bold text-stone-200">تبيان</span> الأكاديمية الفقهية © 2026</p>
+            <p class="text-stone-500">مرتبط بملف البيانات المركزي <code class="text-amber-400/90">data.js</code> لـ "كتاب الصلاة"</p>
+        </div>
+    </footer>
+
+    <!-- استدعاء ملف البيانات المركزي وسكربت الجدول -->
+    <script src="data.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // تفعيل قائمة الجوال
+            const mobileBtn = document.getElementById("mobile-menu-btn");
+            const mobileMenu = document.getElementById("mobile-menu");
+            mobileBtn.addEventListener("click", () => {
+                mobileMenu.classList.toggle("hidden");
+            });
+
+            const tbody = document.getElementById("fiqh-table-body");
+            const searchInput = document.getElementById("table-search");
+            const chapterFilter = document.getElementById("chapter-filter");
+            const resultsCounter = document.getElementById("results-counter");
+
+            // التحقق من وجود مصفوفة fiqhData في data.js
+            if (typeof fiqhData === "undefined" || !Array.isArray(fiqhData)) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="py-10 px-6 text-center text-red-700 bg-red-50 font-semibold">
+                            خطأ في تحميل البيانات: تأكد من وجود ملف <code class="font-bold">data.js</code> في نفس مجلد الصفحة.
+                        </td>
+                    </tr>
+                `;
+                resultsCounter.textContent = "تعذر الاتصال بملف البيانات.";
+                return;
+            }
+
+            // تعبئة قائمة الأبواب الفقهية تلقائياً بدون تكرار
+            const uniqueChapters = [...new Set(fiqhData.map(item => item.chapter).filter(Boolean))];
+            uniqueChapters.forEach(chapter => {
+                const option = document.createElement("option");
+                option.value = chapter;
+                option.textContent = chapter;
+                chapterFilter.appendChild(option);
+            });
+
+            // دالة رسم صفوف الجدول
+            function renderTable(dataList) {
+                tbody.innerHTML = "";
+                resultsCounter.textContent = `عرض ${dataList.length} من أصل ${fiqhData.length} مسألة فقهية موثقة`;
+
+                if (dataList.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="py-12 px-6 text-center text-stone-500">
+                                لا توجد مسائل تطابق خيارات البحث أو التصفية الحالية.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                dataList.forEach(item => {
+                    // بناء HTML للأقوال والأدلة وثمرة الخلاف
+                    const opinionsHTML = (item.opinions || []).map(op => {
+                        const evidenceList = (op.evidence || []).map(ev => `<li>${ev}</li>`).join("");
+                        return `
+                            <div class="mb-4 pb-4 border-b border-stone-200/80 last:border-0 last:mb-0 last:pb-0">
+                                <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                    <span class="bg-amber-100 text-amber-950 text-xs font-bold px-2.5 py-0.5 rounded-md">
+                                        ${op.opinion_number || "قول"}
+                                    </span>
+                                    <span class="text-xs font-bold text-stone-700">
+                                        (${op.scholars || "غير محدد"})
+                                    </span>
+                                </div>
+                                <p class="text-stone-800 font-semibold text-xs leading-relaxed mb-2">
+                                    ${op.statement || ""}
+                                </p>
+                                <div class="bg-stone-50 p-3 rounded-xl border border-stone-200/70 text-xs space-y-1.5">
+                                    ${evidenceList ? `
+                                        <div>
+                                            <strong class="text-stone-700 block mb-0.5">الأدلة:</strong>
+                                            <ul class="list-disc list-inside text-stone-600 space-y-0.5 leading-relaxed">
+                                                ${evidenceList}
+                                            </ul>
+                                        </div>
+                                    ` : ""}
+                                    ${op.fruit ? `
+                                        <div class="pt-1 border-t border-stone-200/60 text-amber-900 font-semibold">
+                                            ثمرة الخلاف: <span class="font-normal text-stone-700">${op.fruit}</span>
+                                        </div>
+                                    ` : ""}
+                                </div>
+                            </div>
+                        `;
+                    }).join("");
+
+                    const tr = document.createElement("tr");
+                    tr.className = "hover:bg-stone-50/90 transition align-top";
+                    tr.innerHTML = `
+                        <!-- العمود 1: الباب والمسألة والمراجع -->
+                        <td class="py-6 px-6">
+                            <span class="inline-block text-xs font-bold text-amber-900 bg-amber-50 border border-amber-200/70 px-2.5 py-1 rounded-lg mb-2">
+                                ${item.chapter || "باب غير مصنف"}
+                            </span>
+                            <div class="font-black text-stone-900 text-base leading-snug mb-2">
+                                <span class="text-stone-400 font-bold text-xs ml-1">#${item.id}</span>
+                                ${item.title || ""}
+                            </div>
+                            ${item.references ? `
+                                <div class="text-xs text-stone-500 bg-stone-100/80 p-2 rounded-lg mt-2">
+                                    <strong class="text-stone-700">المراجع:</strong> ${item.references}
+                                </div>
+                            ` : ""}
+                        </td>
+
+                        <!-- العمود 2: تحرير محل الخلاف -->
+                        <td class="py-6 px-6 text-stone-700 text-xs leading-relaxed">
+                            <div class="bg-stone-50/80 p-3.5 rounded-xl border border-stone-200/60">
+                                ${item.tahrir_mahal_alkhilaf || "لا يوجد نص مسجل."}
+                            </div>
+                        </td>
+
+                        <!-- العمود 3: الأقوال والأدلة -->
+                        <td class="py-6 px-6">
+                            ${opinionsHTML || '<span class="text-xs text-stone-400">لا توجد أقوال مسجلة.</span>'}
+                        </td>
+
+                        <!-- العمود 4: القول الراجح وسبب الخلاف -->
+                        <td class="py-6 px-6 space-y-3">
+                            <div class="bg-emerald-50/90 border border-emerald-200 p-3.5 rounded-xl">
+                                <span class="text-xs font-bold text-emerald-800 block mb-1">القول الراجح:</span>
+                                <p class="text-emerald-950 text-xs font-bold leading-relaxed">
+                                    ${item.preponderant_opinion || "لم يحدد"}
+                                </p>
+                            </div>
+                            ${item.cause_of_dispute ? `
+                                <div class="bg-amber-50/60 border border-amber-200/70 p-3.5 rounded-xl text-xs">
+                                    <strong class="text-amber-950 block mb-1">سبب الخلاف:</strong>
+                                    <p class="text-stone-700 leading-relaxed">${item.cause_of_dispute}</p>
+                                </div>
+                            ` : ""}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // دالة الفلترة المزدوجة (الباب + النص)
+            function filterData() {
+                const selectedChapter = chapterFilter.value;
+                const query = searchInput.value.trim().toLowerCase();
+
+                const filtered = fiqhData.filter(item => {
+                    const matchesChapter = selectedChapter === "all" || item.chapter === selectedChapter;
+                    
+                    if (!query) return matchesChapter;
+
+                    const inTitle = (item.title || "").toLowerCase().includes(query);
+                    const inChapter = (item.chapter || "").toLowerCase().includes(query);
+                    const inTahrir = (item.tahrir_mahal_alkhilaf || "").toLowerCase().includes(query);
+                    const inPreponderant = (item.preponderant_opinion || "").toLowerCase().includes(query);
+                    const inCause = (item.cause_of_dispute || "").toLowerCase().includes(query);
+                    const inOpinions = (item.opinions || []).some(op =>
+                        (op.statement || "").toLowerCase().includes(query) ||
+                        (op.scholars || "").toLowerCase().includes(query) ||
+                        (op.evidence || []).some(ev => ev.toLowerCase().includes(query))
+                    );
+
+                    return matchesChapter && (inTitle || inChapter || inTahrir || inPreponderant || inCause || inOpinions);
+                });
+
+                renderTable(filtered);
+            }
+
+            // تشغيل العرض الأولي وربط الأحداث
+            renderTable(fiqhData);
+            searchInput.addEventListener("input", filterData);
+            chapterFilter.addEventListener("change", filterData);
+        });
+    </script>
+</body>
+</html>

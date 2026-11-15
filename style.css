@@ -1,0 +1,493 @@
+/* ==========================================================================
+   1. المتغيرات الأساسية والخطوط (Variables & Typography)
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700;800&display=swap');
+
+:root {
+  /* لوحة الألوان الأكاديمية */
+  --primary-color: #1b365d;      /* أزرق كحلي داكن (وقار وعلم) */
+  --primary-light: #2b4c7e;      /* أزرق متوسط للتفاعل */
+  --accent-color: #c5a059;       /* ذهبي هادئ (تراث إسلامي) */
+  --accent-hover: #b08d47;
+  
+  /* ألوان الخلفيات والنصوص */
+  --bg-body: #f8fafc;            /* رمادي فاتح جداً مريح للعين */
+  --bg-surface: #ffffff;         /* أبيض نقي للبطاقات والجداول */
+  --text-main: #1e293b;          /* رمادي داكن للنصوص الأساسية */
+  --text-muted: #64748b;         /* رمادي متوسط للنصوص الثانوية */
+  --border-color: #e2e8f0;       /* حدود ناعمة */
+
+  /* ألوان المذاهب الفقهية (لتمييز الشارات) */
+  --hanafi-bg: #fef3c7; --hanafi-text: #92400e;
+  --maliki-bg: #dcfce7; --maliki-text: #166534;
+  --shafii-bg: #dbeafe; --shafii-text: #1e40af;
+  --hanbali-bg: #f3e8ff; --hanbali-text: #6b21a8;
+
+  /* الخطوط */
+  --font-ui: 'Tajawal', sans-serif;
+  --font-quran-fiqh: 'Amiri', serif;
+
+  /* الظلال والزوايا */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(27, 54, 93, 0.08), 0 2px 4px -1px rgba(27, 54, 93, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(27, 54, 93, 0.1);
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --transition: all 0.25s ease;
+}
+
+/* ==========================================================================
+   2. التهيئة العامة (Reset & Base)
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  direction: rtl;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-ui);
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  line-height: 1.7;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ==========================================================================
+   3. شريط التنقل العلوي (Header & Navigation)
+   ========================================================================== */
+.navbar {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 1rem 0;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 3px solid var(--accent-color);
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.brand-title {
+  font-family: var(--font-quran-fiqh);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.brand-subtitle {
+  font-size: 0.85rem;
+  color: var(--accent-color);
+  display: block;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 0.5rem;
+}
+
+.nav-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #e2e8f0;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.nav-btn.active {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   4. قسم البحث والتصفية (Search & Filters Section)
+   ========================================================================== */
+.search-section {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+  padding: 2.5rem 0;
+  color: #ffffff;
+  margin-bottom: 2rem;
+}
+
+.search-box-wrapper {
+  background-color: var(--bg-surface);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  color: var(--text-main);
+  background-color: var(--bg-body);
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.2);
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-light);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1.5px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+.btn-outline:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* ==========================================================================
+   5. إدارة الصفحات/العروض (Views Management)
+   ========================================================================== */
+.view-section {
+  display: none;
+  animation: fadeIn 0.35s ease;
+  padding-bottom: 3rem;
+}
+
+.view-section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.section-title {
+  font-size: 1.4rem;
+  color: var(--primary-color);
+  font-weight: 800;
+}
+
+.results-badge {
+  background-color: var(--primary-color);
+  color: var(--accent-color);
+  padding: 0.25rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   6. بطاقات عرض المسائل الفقهية (Fiqh Issue Cards)
+   ========================================================================== */
+.issues-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+.issue-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-top: 4px solid var(--primary-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.issue-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-top-color: var(--accent-color);
+}
+
+.card-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.tag {
+  font-size: 0.78rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.tag-book {
+  background-color: #eef2ff;
+  color: var(--primary-color);
+}
+
+.tag-chapter {
+  background-color: #fefce8;
+  color: #854d0e;
+  border: 1px solid #fef08a;
+}
+
+.issue-title {
+  font-family: var(--font-quran-fiqh);
+  font-size: 1.35rem;
+  color: var(--primary-color);
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.issue-reason {
+  background-color: var(--bg-body);
+  border-right: 3px solid var(--accent-color);
+  padding: 0.65rem 0.9rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  border-radius: 4px;
+}
+
+.issue-reason strong {
+  color: var(--primary-color);
+}
+
+/* آراء المذاهب داخل البطاقة */
+.madhahib-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-top: 1px dashed var(--border-color);
+  padding-top: 1rem;
+}
+
+.madhhab-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.92rem;
+}
+
+.madhhab-badge {
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-hanafi { background: var(--hanafi-bg); color: var(--hanafi-text); }
+.badge-maliki { background: var(--maliki-bg); color: var(--maliki-text); }
+.badge-shafii { background: var(--shafii-bg); color: var(--shafii-text); }
+.badge-hanbali { background: var(--hanbali-bg); color: var(--hanbali-text); }
+
+.madhhab-opinion {
+  color: var(--text-main);
+  text-align: left;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   7. الجداول المقارنة (Comparative Tables)
+   ========================================================================== */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.fiqh-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+  min-width: 800px;
+}
+
+.fiqh-table thead {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.fiqh-table th {
+  padding: 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-bottom: 3px solid var(--accent-color);
+}
+
+.fiqh-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.92rem;
+  vertical-align: top;
+}
+
+.fiqh-table tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.fiqh-table tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+.table-issue-name {
+  font-family: var(--font-quran-fiqh);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+/* ==========================================================================
+   8. الحالة الفارغة والتنبيهات (Empty States & Alerts)
+   ========================================================================== */
+.empty-state {
+  text-align: center;
+  padding: 3.5rem 1.5rem;
+  background-color: var(--bg-surface);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  grid-column: 1 / -1;
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  color: var(--accent-color);
+  margin-bottom: 0.75rem;
+}
+
+.empty-state h3 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.empty-state p {
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+/* ==========================================================================
+   9. التجاوب مع الشاشات (Responsive Media Queries)
+   ========================================================================== */
+@media (max-width: 992px) {
+  .search-box-wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .nav-links {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+
+  .search-box-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .issues-grid {
+    grid-template-columns: 1fr;
+  }
+}

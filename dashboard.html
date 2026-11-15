@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المشرف وإدارة المحتوى | تبيان - كتاب الصلاة</title>
+    
+    <!-- خط Cairo من Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f5f5f4;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d6d3d1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #92400e;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 flex flex-col min-h-screen selection:bg-amber-900 selection:text-stone-50">
+
+    <!-- شريط التنقل الموحد (Header) - بدون شعارات بصرية -->
+    <header class="bg-stone-100 border-b border-stone-300 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between py-4 gap-4">
+                <div>
+                    <a href="index.html" class="inline-block">
+                        <span class="text-2xl font-extrabold text-amber-950 tracking-tight">تبيان</span>
+                        <span class="block text-xs font-medium text-stone-600 mt-0.5">الموسوعة الأكاديمية المقارنة — كتاب الصلاة</span>
+                    </a>
+                </div>
+
+                <nav class="flex flex-wrap items-center gap-2 sm:gap-4 text-sm font-semibold">
+                    <a href="index.html" class="px-3 py-2 rounded-md text-stone-700 hover:text-amber-900 hover:bg-stone-200/70 transition-colors">
+                        الرئيسية
+                    </a>
+                    <a href="search.html" class="px-3 py-2 rounded-md text-stone-700 hover:text-amber-900 hover:bg-stone-200/70 transition-colors">
+                        البحث الفقهي
+                    </a>
+                    <a href="table.html" class="px-3 py-2 rounded-md text-stone-700 hover:text-amber-900 hover:bg-stone-200/70 transition-colors">
+                        جدول المقارنات والمسائل
+                    </a>
+                    <a href="dashboard.html" class="px-3 py-2 rounded-md bg-amber-900 text-stone-50 shadow-sm" aria-current="page">
+                        لوحة المشرف
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- ترويسة لوحة المشرف وأدوات التصدير -->
+        <section class="border-b border-stone-300 pb-6 flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-900/10 px-2.5 py-1 rounded border border-amber-800/20">
+                    إدارة البيانات والتحرير العلمي
+                </span>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-amber-950 mt-2">
+                    لوحة المشرف — إدارة المسائل الفقهية
+                </h1>
+                <p class="text-stone-600 text-sm sm:text-base mt-1 max-w-2xl leading-relaxed">
+                    مرتبطة بملف <code class="bg-stone-200 px-1.5 py-0.5 rounded text-amber-950 font-mono text-xs">data.js</code> لإضافة وتعديل المسائل والأقوال والأدلة وتصدير النسخة المحدثة.
+                </p>
+            </div>
+
+            <!-- أزرار الإجراءات العامة -->
+            <div class="flex flex-wrap items-center gap-2.5">
+                <button type="button" id="btn-new-issue" class="px-4 py-2.5 bg-amber-900 hover:bg-amber-950 text-stone-50 text-sm font-bold rounded-lg shadow-sm transition-colors">
+                    + إضافة مسألة جديدة
+                </button>
+                <button type="button" id="btn-export-code" class="px-4 py-2.5 bg-stone-800 hover:bg-stone-900 text-stone-50 text-sm font-bold rounded-lg shadow-sm transition-colors">
+                    توليد ونسخ data.js
+                </button>
+                <button type="button" id="btn-sync-file" class="px-3.5 py-2.5 bg-stone-200 hover:bg-stone-300 text-stone-800 text-xs font-bold rounded-lg border border-stone-300 transition-colors" title="تجاهل مسودات المتصفح وإعادة القراءة من ملف data.js الأصلي">
+                    مزامنة من ملف data.js
+                </button>
+            </div>
+        </section>
+
+        <!-- تنبيه في حال عدم العثور على ملف data.js -->
+        <div id="missing-file-alert" class="hidden bg-red-50 border border-red-300 text-red-900 px-5 py-4 rounded-xl text-sm font-semibold">
+            تنبيه: لم يتم العثور على المتغير <code class="font-mono bg-red-100 px-1 rounded">fiqhData</code>. تأكد من وجود ملف <code class="font-mono bg-red-100 px-1 rounded">data.js</code> في نفس المجلد مع <code class="font-mono bg-red-100 px-1 rounded">dashboard.html</code>.
+        </div>
+
+        <!-- إحصائيات سريعة -->
+        <section class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-xl border border-stone-300 shadow-sm">
+                <span class="text-xs font-bold text-stone-500">إجمالي المسائل المسجلة</span>
+                <p id="stat-total-issues" class="text-3xl font-extrabold text-amber-950 mt-1">0</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-stone-300 shadow-sm">
+                <span class="text-xs font-bold text-stone-500">الأبواب والجُمل الفقهية</span>
+                <p id="stat-total-chapters" class="text-3xl font-extrabold text-stone-800 mt-1">0</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-stone-300 shadow-sm">
+                <span class="text-xs font-bold text-stone-500">إجمالي الأقوال المحررة</span>
+                <p id="stat-total-opinions" class="text-3xl font-extrabold text-amber-900 mt-1">0</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-stone-300 shadow-sm">
+                <span class="text-xs font-bold text-stone-500">إجمالي الأدلة الشرعية</span>
+                <p id="stat-total-evidences" class="text-3xl font-extrabold text-stone-800 mt-1">0</p>
+            </div>
+        </section>
+
+        <!-- تقسيم الشاشة: نموذج التحرير (يمين) + قائمة المسائل (يسار) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <!-- العمود الأول (7 أعمدة): نموذج إضافة / تعديل مسألة -->
+            <section id="editor-section" class="lg:col-span-7 bg-white rounded-xl border-2 border-amber-900/25 shadow-sm overflow-hidden">
+                <div class="bg-stone-100 border-b border-stone-300 px-6 py-4 flex items-center justify-between">
+                    <h2 id="form-mode-title" class="text-lg font-extrabold text-amber-950">
+                        إضافة مسألة فقهية جديدة
+                    </h2>
+                    <span id="editing-badge" class="hidden text-xs font-bold bg-amber-900 text-stone-50 px-2.5 py-1 rounded">
+                        وضع التعديل
+                    </span>
+                </div>
+
+                <form id="issue-form" class="p-6 space-y-5">
+                    <input type="hidden" id="edit-original-id" value="">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                        <!-- رقم المسألة (id) -->
+                        <div class="sm:col-span-1">
+                            <label for="field-id" class="block text-xs font-bold text-stone-700 mb-1">رقم المسألة (id) *</label>
+                            <input type="number" id="field-id" required min="1"
+                                   class="w-full bg-stone-50 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-amber-800 focus:border-amber-800 p-2.5 font-bold">
+                        </div>
+
+                        <!-- الباب / الجملة (chapter) -->
+                        <div class="sm:col-span-3">
+                            <label for="field-chapter" class="block text-xs font-bold text-stone-700 mb-1">اسم الجملة والباب (chapter) *</label>
+                            <input type="text" id="field-chapter" list="chapters-datalist" required placeholder="مثال: الجملة الأولى: معرفة الوجوب وما يتعلق به"
+                                   class="w-full bg-stone-50 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-amber-800 focus:border-amber-800 p-2.5">
+                            <datalist id="chapters-datalist"></datalist>
+                        </div>
+                    </div>
+
+                    <!-- عنوان المسألة (title) -->
+                    <div>
+                        <label for="field-title" class="block text-xs font-bold text-stone-700 mb-1">عنوان المسألة (title) *</label>
+                        <input type="text" id="field-title" required placeholder="مثال: عدد الصلوات الواجبة (هل الوِتر واجب)؟"
+                               class="w-full bg-stone-50 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-amber-800 focus:border-amber-800 p-2.5 font-semibold">
+                    </div>
+
+                    <!-- تحرير محل الخلاف (tahrir_mahal_alkhilaf) -->
+                    <div>
+                        <label for="field-tahrir" class="block text-xs font-bold text-stone-700 mb-1">تحرير محل الخلاف (tahrir_mahal_alkhilaf) *</label>
+                        <textarea id="field-tahrir" rows="3" required placeholder="بيان موضع الاتفاق وموضع الخلاف بين الفقهاء..."
+                                  class="w-full bg-stone-50 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-amber-800 focus:border-amber-800 p-2.5 leading-relaxed"></textarea>
+                    </div>
+
+                    <!-- قسم الأقوال الديناميكي (opinions) -->
+                    <div class="border-t border-b border-stone-200 py-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-extrabold text-amber-950">الأقوال الفقهية (opinions)</h3>
+                                <p class="text-xs text-stone-500">أضف كل قول مع العلماء المنسوب إليهم، مصفوفة الأدلة، وثمرة الخلاف.</p>
+                            </div>
+                            <button type="button" id="btn-add-opinion" class="px-3 py-1.5 bg-amber-900/10 hover:bg-amber-900 hover:text-stone-50 text-amber-950 border border-amber-900/30 text-xs font-bold rounded-lg transition-colors">
+                                + إضافة قول آخر
+                            </button>
+                        </div>
+
+                        <div id="opinions-container" class="space-y-4">
+                            <!-- بطاقات الأقوال تُحقن هنا -->
+                        </div>
+                    </div>
+
+                    <!-- سبب الخلاف (cause_of_dispute) -->
+                    <div>
+                        <label for="field-cause" class="block text-xs font-bold text-stone-700 mb-1">سبب الخلاف (cause_of_dispute) *</label>
+                        <textarea id="field-cause" rows="2" required placeholder="السبب الأصولي أو الحديثي أو اللغوي لاختلاف الفقهاء..."
+                                  class="w-full bg-stone-50 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-amber-800 focus:border-amber-800 p-2.5 leading-relaxed"></textarea>
+                    </div>
+
+                    <!-- القول الراجح (preponderant_opinion) -->
+                    <div>
+                        <label for="field-preponderant" class="block text-xs font-bold text-stone-700 mb-1">القول الراجح والتوجيه (preponderant_opinion) *</label>
+                        <textarea id="field-preponderant" rows="3" required placeholder="بيان القول المختار ووجه ترجيحه..."
+                                  class="w-full bg-stone-50 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-amber-800 focus:border-amber-800 p-2.5 leading-relaxed"></textarea>
+                    </div>
+
+                    <!-- مراجع المسألة (references) -->
+                    <div>
+                        <label for="field-references" class="block text-xs font-bold text-stone-700 mb-1">مراجع المسألة (references) *</label>
+                        <input type="text" id="field-references" required placeholder="مثال: بداية المجتهد لابن رشد (1/98)، المغني لابن قدامة (2/115)"
+                               class="w-full bg-stone-50 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-amber-800 focus:border-amber-800 p-2.5">
+                    </div>
+
+                    <!-- أزرار الحفظ والإلغاء -->
+                    <div class="pt-3 flex items-center gap-3">
+                        <button type="submit" class="flex-1 py-3 px-5 bg-amber-900 hover:bg-amber-950 text-stone-50 text-sm font-extrabold rounded-lg shadow-sm transition-colors">
+                            حفظ المسألة وتحديث البيانات
+                        </button>
+                        <button type="button" id="btn-cancel-edit" class="hidden py-3 px-4 bg-stone-200 hover:bg-stone-300 text-stone-800 text-sm font-bold rounded-lg transition-colors">
+                            إلغاء التعديل
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- العمود الثاني (5 أعمدة): قائمة المسائل المسجلة للإدارة السريعة -->
+            <section class="lg:col-span-5 bg-white rounded-xl border border-stone-300 shadow-sm overflow-hidden">
+                <div class="bg-stone-100 border-b border-stone-300 px-5 py-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-base font-extrabold text-amber-950">فهرس المسائل في data.js</h2>
+                        <span id="list-count-badge" class="text-xs font-bold bg-stone-200 text-stone-800 px-2.5 py-0.5 rounded-full">0</span>
+                    </div>
+                    <input type="text" id="admin-search-input" placeholder="ابحث برقم المسألة أو العنوان أو الباب..."
+                           class="w-full bg-white border border-stone-300 text-stone-800 text-xs rounded-lg focus:ring-amber-800 focus:border-amber-800 px-3 py-2">
+                </div>
+
+                <div id="admin-issues-list" class="divide-y divide-stone-200 max-h-[840px] overflow-y-auto custom-scrollbar">
+                    <!-- عناصر المسائل تُحقن برمجياً -->
+                </div>
+            </section>
+        </div>
+
+        <!-- صندوق تصدير ملف data.js المحدث -->
+        <section id="export-box" class="hidden bg-stone-900 text-stone-100 rounded-xl border border-stone-700 p-6 space-y-4 shadow-lg">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-700 pb-4">
+                <div>
+                    <h3 class="text-lg font-extrabold text-amber-400">محتوى ملف data.js المُحدّث</h3>
+                    <p class="text-xs text-stone-400 mt-0.5">حمّل الملف مباشرة باسم <code class="text-stone-200">data.js</code> أو انسخ الكود لاستبدال محتوى ملفك الحالي.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" id="btn-copy-json" class="px-4 py-2 bg-amber-800 hover:bg-amber-700 text-stone-50 text-xs font-bold rounded-lg transition-colors">
+                        نسخ الكود
+                    </button>
+                    <button type="button" id="btn-download-js" class="px-4 py-2 bg-stone-700 hover:bg-stone-600 text-stone-100 text-xs font-bold rounded-lg transition-colors">
+                        تنزيل ملف data.js
+                    </button>
+                    <button type="button" id="btn-close-export" class="px-3 py-2 bg-stone-800 hover:bg-stone-700 text-stone-400 text-xs font-bold rounded-lg">
+                        إغلاق
+                    </button>
+                </div>
+            </div>
+            <textarea id="export-textarea" rows="14" readonly dir="ltr"
+                      class="w-full bg-stone-950 text-amber-200 font-mono text-xs p-4 rounded-lg border border-stone-800 focus:outline-none custom-scrollbar"></textarea>
+        </section>
+
+    </main>
+
+    <!-- إشعار منبثق (Toast) -->
+    <div id="toast-notification" class="fixed bottom-5 left-5 z-50 hidden bg-stone-900 text-stone-50 border border-amber-700 px-4 py-3 rounded-lg shadow-lg text-sm font-semibold transition-opacity">
+        تم الحفظ بنجاح
+    </div>
+
+    <!-- التذييل الموحد (Footer) -->
+    <footer class="bg-stone-900 text-stone-300 border-t border-stone-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <span class="text-xl font-extrabold text-stone-50">تبيان</span>
+                    <p class="text-xs text-stone-400 mt-1 max-w-md leading-relaxed">
+                        منصة أكاديمية متخصصة في عرض وتحليل مسائل الفقه المقارن في كتاب الصلاة، وفق منهجية علمية رصينة.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-6 text-xs font-semibold text-stone-400">
+                    <a href="index.html" class="hover:text-stone-100 transition-colors">الرئيسية</a>
+                    <a href="search.html" class="hover:text-stone-100 transition-colors">البحث الفقهي</a>
+                    <a href="table.html" class="hover:text-stone-100 transition-colors">جدول المقارنات والمسائل</a>
+                    <a href="dashboard.html" class="text-amber-500">لوحة المشرف</a>
+                </div>
+            </div>
+            <div class="border-t border-stone-800 mt-6 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-stone-500 gap-2">
+                <p>جميع الحقوق محفوظة &copy; تطبيق تبيان الفقهي — كتاب الصلاة</p>
+                <p>إجمالي المسائل المعتمدة في المقرر: <span id="footer-total-count" class="text-stone-300 font-bold">0</span> مسألة</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- استدعاء ملف البيانات الخارجي الموحد -->
+    <script src="data.js"></script>
+
+    <!-- المنطق البرمجي للوحة المشرف -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const STORAGE_KEY = 'tibyan_dashboard_draft_v1';
+            const missingAlert = document.getElementById('missing-file-alert');
+
+            // التحقق من تحميل ملف data.js الخارجي
+            const baseFileData = (typeof fiqhData !== 'undefined' && Array.isArray(fiqhData)) ? fiqhData : [];
+            if (typeof fiqhData === 'undefined') {
+                missingAlert.classList.remove('hidden');
+            }
+
+            // مصفوفة العمل داخل لوحة المشرف
+            let workingData = [];
+
+            const issueForm = document.getElementById('issue-form');
+            const opinionsContainer = document.getElementById('opinions-container');
+            const adminIssuesList = document.getElementById('admin-issues-list');
+            const adminSearchInput = document.getElementById('admin-search-input');
+            const exportBox = document.getElementById('export-box');
+            const exportTextarea = document.getElementById('export-textarea');
+
+            const arabicOrdinals = [
+                "القول الأول", "القول الثاني", "القول الثالث", "القول الرابع", 
+                "القول الخامس", "القول السادس", "القول السابع"
+            ];
+
+            // 1. تحميل البيانات (من المسودة المحفوظة إن وجدت، وإلا من ملف data.js مباشرة)
+            function initializeData() {
+                const draft = localStorage.getItem(STORAGE_KEY);
+                if (draft) {
+                    try {
+                        const parsed = JSON.parse(draft);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            workingData = parsed;
+                        } else {
+                            workingData = JSON.parse(JSON.stringify(baseFileData));
+                        }
+                    } catch (e) {
+                        workingData = JSON.parse(JSON.stringify(baseFileData));
+                    }
+                } else {
+                    workingData = JSON.parse(JSON.stringify(baseFileData));
+                }
+                workingData.sort((a, b) => Number(a.id) - Number(b.id));
+            }
+
+            function persistChanges() {
+                workingData.sort((a, b) => Number(a.id) - Number(b.id));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(workingData));
+                refreshUI();
+            }
+
+            function showToast(msg) {
+                const toast = document.getElementById('toast-notification');
+                toast.textContent = msg;
+                toast.classList.remove('hidden');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 3200);
+            }
+
+            // 2. تحديث الإحصائيات وقائمة الأبواب المقترحة
+            function updateStatsAndDatalist() {
+                document.getElementById('stat-total-issues').textContent = workingData.length;
+                document.getElementById('footer-total-count').textContent = workingData.length;
+
+                const chapters = [...new Set(workingData.map(i => i.chapter).filter(Boolean))];
+                document.getElementById('stat-total-chapters').textContent = chapters.length;
+
+                let totalOpinions = 0;
+                let totalEvidences = 0;
+
+                workingData.forEach(item => {
+                    if (Array.isArray(item.opinions)) {
+                        totalOpinions += item.opinions.length;
+                        item.opinions.forEach(op => {
+                            if (Array.isArray(op.evidence)) {
+                                totalEvidences += op.evidence.length;
+                            }
+                        });
+                    }
+                });
+
+                document.getElementById('stat-total-opinions').textContent = totalOpinions;
+                document.getElementById('stat-total-evidences').textContent = totalEvidences;
+
+                const datalist = document.getElementById('chapters-datalist');
+                datalist.innerHTML = chapters.map(c => `<option value="${escapeHtml(c)}">`).join('');
+            }
+
+            function escapeHtml(str) {
+                if (typeof str !== 'string') return '';
+                return str
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;");
+            }
+
+            // 3. بناء بطاقة قول فقهي (مطابقة تماماً لهيكل opinions)
+            function createOpinionCard(opinionData = null, index = 0) {
+                const card = document.createElement('div');
+                card.className = 'opinion-card bg-stone-50 border border-stone-300 rounded-lg p-4 space-y-3';
+                
+                const opNumber = opinionData?.opinion_number || arabicOrdinals[index] || `القول ${index + 1}`;
+                const statement = opinionData?.statement || '';
+                const scholars = opinionData?.scholars || '';
+                const evidenceText = Array.isArray(opinionData?.evidence) 
+                    ? opinionData.evidence.join('\n') 
+                    : (typeof opinionData?.evidence === 'string' ? opinionData.evidence : '');
+                const fruit = opinionData?.fruit || '';
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-stone-200 pb-2">
+                        <span class="text-xs font-extrabold text-amber-900">تفاصيل القول الفقهي</span>
+                        <button type="button" class="btn-remove-opinion text-xs font-bold text-red-700 hover:text-red-900 px-2 py-0.5 rounded hover:bg-red-50 transition-colors">
+                            حذف القول
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-700 mb-1">رقم/عنوان القول (opinion_number) *</label>
+                            <input type="text" class="op-number w-full bg-white border border-stone-300 text-stone-900 text-xs rounded-md p-2 font-bold" 
+                                   value="${escapeHtml(opNumber)}" required>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] font-bold text-stone-700 mb-1">العلماء المنسوب إليهم القول (scholars) *</label>
+                            <input type="text" class="op-scholars w-full bg-white border border-stone-300 text-stone-900 text-xs rounded-md p-2" 
+                                   value="${escapeHtml(scholars)}" placeholder="مثال: جمهور الفقهاء من المالكية والشافعية والحنابلة" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-stone-700 mb-1">نص القول (statement) *</label>
+                        <textarea rows="2" class="op-statement w-full bg-white border border-stone-300 text-stone-900 text-xs rounded-md p-2 leading-relaxed" 
+                                  placeholder="صياغة الحكم الفقهي لهذا القول..." required>${escapeHtml(statement)}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-stone-700 mb-1">
+                            الأدلة الشرعية (evidence) <span class="text-stone-500 font-normal">— اكتب كل دليل في سطر مستقل ليُحفظ كمصفوفة</span>
+                        </label>
+                        <textarea rows="3" class="op-evidence w-full bg-white border border-stone-300 text-stone-900 text-xs rounded-md p-2 leading-relaxed" 
+                                  placeholder="الدليل الأول...&#10;الدليل الثاني...">${escapeHtml(evidenceText)}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-stone-700 mb-1">ثمرة الخلاف (fruit)</label>
+                        <input type="text" class="op-fruit w-full bg-white border border-stone-300 text-stone-900 text-xs rounded-md p-2" 
+                               value="${escapeHtml(fruit)}" placeholder="الأثر الفقهي العملي المترتب على هذا القول...">
+                    </div>
+                `;
+
+                card.querySelector('.btn-remove-opinion').addEventListener('click', () => {
+                    if (opinionsContainer.children.length > 1) {
+                        card.remove();
+                    } else {
+                        showToast('يجب أن تحتوي المسألة على قول واحد على الأقل.');
+                    }
+                });
+
+                opinionsContainer.appendChild(card);
+            }
+
+            // 4. إعادة ضبط النموذج لوضع الإضافة الجديدة
+            function resetFormToNew() {
+                issueForm.reset();
+                document.getElementById('edit-original-id').value = '';
+                document.getElementById('form-mode-title').textContent = 'إضافة مسألة فقهية جديدة';
+                document.getElementById('editing-badge').classList.add('hidden');
+                document.getElementById('btn-cancel-edit').classList.add('hidden');
+
+                const maxId = workingData.length > 0 ? Math.max(...workingData.map(i => Number(i.id))) : 0;
+                document.getElementById('field-id').value = maxId + 1;
+
+                opinionsContainer.innerHTML = '';
+                createOpinionCard(null, 0);
+                createOpinionCard(null, 1);
+            }
+
+            // 5. تحميل بيانات مسألة قائمة إلى النموذج للتعديل
+            function loadIssueIntoForm(id) {
+                const issue = workingData.find(item => Number(item.id) === Number(id));
+                if (!issue) return;
+
+                document.getElementById('edit-original-id').value = issue.id;
+                document.getElementById('form-mode-title').textContent = `تعديل المسألة رقم (${issue.id})`;
+                document.getElementById('editing-badge').classList.remove('hidden');
+                document.getElementById('btn-cancel-edit').classList.remove('hidden');
+
+                document.getElementById('field-id').value = issue.id;
+                document.getElementById('field-chapter').value = issue.chapter || '';
+                document.getElementById('field-title').value = issue.title || '';
+                document.getElementById('field-tahrir').value = issue.tahrir_mahal_alkhilaf || '';
+                document.getElementById('field-cause').value = issue.cause_of_dispute || '';
+                document.getElementById('field-preponderant').value = issue.preponderant_opinion || '';
+                document.getElementById('field-references').value = issue.references || '';
+
+                opinionsContainer.innerHTML = '';
+                if (Array.isArray(issue.opinions) && issue.opinions.length > 0) {
+                    issue.opinions.forEach((op, idx) => createOpinionCard(op, idx));
+                } else {
+                    createOpinionCard(null, 0);
+                }
+
+                document.getElementById('editor-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            // 6. عرض قائمة المسائل في العمود الجانبي
+            function renderAdminList(filterText = '') {
+                const filtered = workingData.filter(item => {
+                    if (!filterText) return true;
+                    return (item.title && item.title.includes(filterText)) || 
+                           (item.chapter && item.chapter.includes(filterText)) || 
+                           String(item.id) === filterText.trim();
+                });
+
+                document.getElementById('list-count-badge').textContent = filtered.length;
+                adminIssuesList.innerHTML = '';
+
+                if (filtered.length === 0) {
+                    adminIssuesList.innerHTML = `<div class="p-8 text-center text-xs text-stone-500">لا توجد مسائل مطابقة للبحث.</div>`;
+                    return;
+                }
+
+                filtered.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'p-4 hover:bg-stone-50 transition-colors flex flex-col gap-2';
+                    div.innerHTML = `
+                        <div>
+                            <span class="inline-block text-[11px] font-extrabold text-amber-900 bg-amber-900/10 px-2 py-0.5 rounded">
+                                مسألة #${item.id}
+                            </span>
+                            <span class="text-[11px] text-stone-500 mr-1">${escapeHtml(item.chapter)}</span>
+                            <h3 class="text-sm font-bold text-stone-900 mt-1 leading-snug">${escapeHtml(item.title)}</h3>
+                        </div>
+                        <div class="flex items-center justify-between pt-1">
+                            <span class="text-[11px] text-stone-500 font-semibold">عدد الأقوال: ${(item.opinions || []).length}</span>
+                            <div class="flex items-center gap-2">
+                                <a href="table.html?id=${item.id}" target="_blank" class="text-xs font-semibold text-stone-600 hover:text-amber-900 underline">
+                                    معاينة
+                                </a>
+                                <button type="button" class="btn-edit-item px-2.5 py-1 bg-stone-200 hover:bg-amber-900 hover:text-stone-50 text-stone-800 text-xs font-bold rounded transition-colors">
+                                    تعديل
+                                </button>
+                                <button type="button" class="btn-delete-item px-2.5 py-1 bg-red-50 hover:bg-red-700 hover:text-white text-red-800 text-xs font-bold rounded border border-red-200 transition-colors">
+                                    حذف
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    div.querySelector('.btn-edit-item').addEventListener('click', () => loadIssueIntoForm(item.id));
+                    div.querySelector('.btn-delete-item').addEventListener('click', () => {
+                        if (confirm(`هل أنت متأكد من حذف المسألة رقم (${item.id}): "${item.title}"؟`)) {
+                            workingData = workingData.filter(i => Number(i.id) !== Number(item.id));
+                            persistChanges();
+                            showToast('تم حذف المسألة. تذكر تنزيل ملف data.js المحدث.');
+                        }
+                    });
+
+                    adminIssuesList.appendChild(div);
+                });
+            }
+
+            // 7. حفظ النموذج (إضافة أو تعديل)
+            issueForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const originalId = document.getElementById('edit-original-id').value;
+                const newId = Number(document.getElementById('field-id').value);
+
+                const duplicate = workingData.find(i => Number(i.id) === newId && String(i.id) !== originalId);
+                if (duplicate) {
+                    alert(`يوجد مسألة مسجلة مسبقاً برقم (${newId}). يرجى اختيار رقم آخر أو تعديل المسألة الموجودة.`);
+                    return;
+                }
+
+                // تجميع مصفوفة opinions بالبنية المعتمدة
+                const opinionCards = opinionsContainer.querySelectorAll('.opinion-card');
+                const opinions = Array.from(opinionCards).map(card => {
+                    const rawEvidence = card.querySelector('.op-evidence').value;
+                    const evidenceArray = rawEvidence
+                        .split('\n')
+                        .map(line => line.trim())
+                        .filter(line => line.length > 0);
+
+                    return {
+                        opinion_number: card.querySelector('.op-number').value.trim(),
+                        statement: card.querySelector('.op-statement').value.trim(),
+                        scholars: card.querySelector('.op-scholars').value.trim(),
+                        evidence: evidenceArray,
+                        fruit: card.querySelector('.op-fruit').value.trim()
+                    };
+                });
+
+                const issueObject = {
+                    id: newId,
+                    chapter: document.getElementById('field-chapter').value.trim(),
+                    title: document.getElementById('field-title').value.trim(),
+                    tahrir_mahal_alkhilaf: document.getElementById('field-tahrir').value.trim(),
+                    opinions: opinions,
+                    cause_of_dispute: document.getElementById('field-cause').value.trim(),
+                    preponderant_opinion: document.getElementById('field-preponderant').value.trim(),
+                    references: document.getElementById('field-references').value.trim()
+                };
+
+                if (originalId !== '') {
+                    const idx = workingData.findIndex(i => String(i.id) === originalId);
+                    if (idx !== -1) {
+                        workingData[idx] = issueObject;
+                    }
+                    showToast(`تم تحديث المسألة رقم (${newId}) بنجاح.`);
+                } else {
+                    workingData.push(issueObject);
+                    showToast(`تمت إضافة المسألة رقم (${newId}) بنجاح.`);
+                }
+
+                persistChanges();
+                resetFormToNew();
+            });
+
+            // 8. توليد وتنزيل ملف data.js المحدث
+            document.getElementById('btn-export-code').addEventListener('click', () => {
+                const formattedCode = `const fiqhData = ${JSON.stringify(workingData, null, 2)};\n`;
+                exportTextarea.value = formattedCode;
+                exportBox.classList.remove('hidden');
+                exportBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+
+            document.getElementById('btn-copy-json').addEventListener('click', () => {
+                exportTextarea.select();
+                navigator.clipboard.writeText(exportTextarea.value).then(() => {
+                    showToast('تم نسخ محتوى data.js إلى الحافظة بنجاح!');
+                });
+            });
+
+            document.getElementById('btn-download-js').addEventListener('click', () => {
+                const blob = new Blob([exportTextarea.value], { type: 'application/javascript;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'data.js';
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('بدأ تنزيل ملف data.js المحدث.');
+            });
+
+            document.getElementById('btn-close-export').addEventListener('click', () => {
+                exportBox.classList.add('hidden');
+            });
+
+            // أزرار التحكم الإضافية
+            document.getElementById('btn-add-opinion').addEventListener('click', () => {
+                createOpinionCard(null, opinionsContainer.children.length);
+            });
+
+            document.getElementById('btn-new-issue').addEventListener('click', () => {
+                resetFormToNew();
+                document.getElementById('editor-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+
+            document.getElementById('btn-cancel-edit').addEventListener('click', resetFormToNew);
+
+            document.getElementById('btn-sync-file').addEventListener('click', () => {
+                if (confirm('سيتم مسح المسودات المؤقتة في المتصفح وإعادة تحميل البيانات من ملف data.js الخارجي مباشرة. هل تريد المتابعة؟')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    workingData = JSON.parse(JSON.stringify(baseFileData));
+                    workingData.sort((a, b) => Number(a.id) - Number(b.id));
+                    refreshUI();
+                    resetFormToNew();
+                    showToast('تمت المزامنة مع ملف data.js الخارجي.');
+                }
+            });
+
+            adminSearchInput.addEventListener('input', (e) => {
+                renderAdminList(e.target.value.trim());
+            });
+
+            function refreshUI() {
+                updateStatsAndDatalist();
+                renderAdminList(adminSearchInput.value.trim());
+            }
+
+            // التشغيل الأولي
+            initializeData();
+            refreshUI();
+            resetFormToNew();
+        });
+    </script>
+</body>
+</html>

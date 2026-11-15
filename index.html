@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تبيان | المنصة الأكاديمية لكتاب الصلاة</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased min-h-screen flex flex-col justify-between selection:bg-amber-200 selection:text-amber-950">
+
+    <!-- شريط التنقل العلوي -->
+    <header class="bg-white/95 backdrop-blur-md border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- اسم المنصة فقط بدون لوقو -->
+            <div>
+                <a href="index.html" class="block">
+                    <span class="text-2xl font-black text-amber-950 tracking-wide">تبيان</span>
+                    <span class="block text-xs text-stone-500 font-semibold">الموسوعة الفقهية الأكاديمية</span>
+                </a>
+            </div>
+
+            <!-- روابط سطح المكتب -->
+            <nav class="hidden md:flex items-center gap-8 font-semibold text-stone-600 text-sm">
+                <a href="index.html" class="text-amber-900 font-bold border-b-2 border-amber-800 pb-1">الرئيسية</a>
+                <a href="search.html" class="hover:text-amber-900 transition">البحث الفقهي</a>
+                <a href="table.html" class="hover:text-amber-900 transition">جدول المقارنات والمسائل</a>
+                <a href="dashboard.html" class="hover:text-amber-900 transition">لوحة المشرف</a>
+            </nav>
+
+            <!-- زر البحث + زر قائمة الجوال -->
+            <div class="flex items-center gap-3">
+                <a href="search.html" class="bg-amber-900 hover:bg-amber-950 text-white px-5 py-2.5 rounded-xl font-bold shadow-sm transition text-sm">
+                    بحث في المسائل
+                </a>
+                <button id="mobile-menu-btn" aria-label="القائمة" class="md:hidden p-2 rounded-xl border border-stone-200 text-stone-700 hover:bg-stone-100 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- قائمة الجوال المنسدلة -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-stone-200 px-4 py-4 space-y-3 text-sm font-semibold text-stone-700">
+            <a href="index.html" class="block text-amber-900 font-bold py-1.5">الرئيسية</a>
+            <a href="search.html" class="block hover:text-amber-900 py-1.5">البحث الفقهي</a>
+            <a href="table.html" class="block hover:text-amber-900 py-1.5">جدول المقارنات والمسائل</a>
+            <a href="dashboard.html" class="block hover:text-amber-900 py-1.5">لوحة المشرف</a>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow">
+        <!-- قسم الترحيب (Hero Section) -->
+        <section class="relative bg-gradient-to-br from-stone-900 via-amber-950 to-stone-900 text-stone-100 py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+            <div class="absolute inset-0 opacity-5 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:20px_20px]"></div>
+            <div class="max-w-4xl mx-auto text-center relative z-10">
+                <span class="bg-amber-950/90 border border-amber-700/50 text-amber-200 text-xs font-bold px-4 py-1.5 rounded-full tracking-wide mb-6 inline-block shadow-sm">
+                    المشروع الأكاديمي: كتاب الصلاة وتفرعاته
+                </span>
+                <h1 class="text-4xl sm:text-6xl font-black tracking-tight mb-6 leading-tight text-white">
+                    منصة <span class="text-amber-400">تبيان</span> الفقهية
+                </h1>
+                <p class="text-lg sm:text-xl text-stone-300 mb-10 max-w-2xl mx-auto leading-relaxed font-normal">
+                    مرجع علمي منهجي لعرض مسائل <strong class="text-white font-semibold">كتاب الصلاة</strong>، وتحرير محل الخلاف، وتتبع الأقوال الفقهية والأدلة الشرعية والترجيح بدقة متناهية.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="table.html" class="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3.5 rounded-xl font-bold shadow-lg shadow-amber-950/40 transition text-base">
+                        تصفح جدول المسائل والأبواب
+                    </a>
+                    <a href="search.html" class="bg-stone-800/80 hover:bg-stone-800 border border-stone-700 text-stone-200 px-8 py-3.5 rounded-xl font-bold transition text-base backdrop-blur-sm">
+                        بحث سريع في الأدلة والأقوال
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- شريط الإحصائيات الأكاديمية المستخرجة تلقائياً من data.js -->
+        <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+            <div class="bg-white rounded-2xl shadow-md border border-stone-200/90 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x sm:divide-x-reverse divide-stone-200 text-center">
+                <div class="p-6">
+                    <span class="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">الأبواب الفقهية</span>
+                    <span id="stat-chapters" class="text-3xl font-black text-amber-900">0</span>
+                </div>
+                <div class="p-6">
+                    <span class="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">المسائل الموثقة</span>
+                    <span id="stat-issues" class="text-3xl font-black text-amber-900">0</span>
+                </div>
+                <div class="p-6">
+                    <span class="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-1">مجموع الأقوال الفقهية</span>
+                    <span id="stat-opinions" class="text-3xl font-black text-amber-900">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم الأبواب والمسائل الديناميكية -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center mb-14">
+                <span class="text-amber-800 text-xs font-bold uppercase tracking-widest bg-amber-100/80 px-3.5 py-1.5 rounded-md">هيكل المحتوى</span>
+                <h2 class="text-3xl font-black text-stone-900 mt-4 mb-2">أبواب ومسائل "كتاب الصلاة"</h2>
+                <p class="text-stone-500 text-base max-w-xl mx-auto">استعراض منهجي للأبواب الفقهية المتفرعة عن كتاب الصلاة وأبرز المسائل المدرجة تحت كل باب</p>
+            </div>
+
+            <!-- شبكة عرض الأبواب -->
+            <div id="chapters-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                <!-- تُعبأ ديناميكياً من data.js -->
+            </div>
+        </section>
+    </main>
+
+    <!-- التذييل (Footer) -->
+    <footer class="bg-stone-900 text-stone-400 border-t border-stone-800 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-sm gap-2">
+            <p>منصة <span class="font-bold text-stone-200">تبيان</span> الأكاديمية الفقهية © 2026</p>
+            <p class="text-stone-500">مرتبط بملف البيانات المركزي <code class="text-amber-400/90">data.js</code> لـ "كتاب الصلاة"</p>
+        </div>
+    </footer>
+
+    <!-- استدعاء ملف البيانات المركزي وسكربت الصفحة -->
+    <script src="data.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // تفعيل قائمة الجوال
+            const mobileBtn = document.getElementById("mobile-menu-btn");
+            const mobileMenu = document.getElementById("mobile-menu");
+            mobileBtn.addEventListener("click", () => {
+                mobileMenu.classList.toggle("hidden");
+            });
+
+            const grid = document.getElementById("chapters-grid");
+
+            // التحقق من تحميل data.js
+            if (typeof fiqhData === "undefined" || !Array.isArray(fiqhData)) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-red-50 border border-red-200 text-red-700 p-6 rounded-2xl text-center text-sm font-semibold">
+                        تعذر تحميل البيانات: تأكد من وجود ملف <code class="font-bold">data.js</code> في نفس مجلد الصفحة.
+                    </div>
+                `;
+                return;
+            }
+
+            // تجميع المسائل حسب الباب وحساب الإحصائيات
+            let totalOpinions = 0;
+            const grouped = fiqhData.reduce((acc, item) => {
+                const chapterName = item.chapter || "باب غير مصنف";
+                acc[chapterName] = acc[chapterName] || [];
+                acc[chapterName].push(item);
+                if (Array.isArray(item.opinions)) {
+                    totalOpinions += item.opinions.length;
+                }
+                return acc;
+            }, {});
+
+            const chapterNames = Object.keys(grouped);
+
+            // تحديث بطاقات الإحصائيات
+            document.getElementById("stat-chapters").textContent = chapterNames.length;
+            document.getElementById("stat-issues").textContent = fiqhData.length;
+            document.getElementById("stat-opinions").textContent = totalOpinions;
+
+            // بناء بطاقات الأبواب
+            grid.innerHTML = "";
+            chapterNames.forEach(chapterName => {
+                const issues = grouped[chapterName];
+                const card = document.createElement("article");
+                card.className = "bg-white p-7 rounded-2xl shadow-sm border border-stone-200/90 hover:border-amber-700 hover:shadow-md transition-all duration-200 flex flex-col justify-between group";
+
+                let issuesListHTML = issues.slice(0, 3).map(issue => `
+                    <li class="text-xs text-stone-600 flex items-start gap-2">
+                        <span class="text-amber-700 font-bold mt-0.5">•</span>
+                        <span class="line-clamp-1">${issue.title}</span>
+                    </li>
+                `).join("");
+
+                if (issues.length > 3) {
+                    issuesListHTML += `
+                        <li class="text-xs text-amber-800 font-bold pt-1">
+                            + ${issues.length - 3} مسائل إضافية في هذا الباب
+                        </li>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <span class="px-3 py-1 bg-amber-50 text-amber-900 border border-amber-200/70 rounded-lg font-bold text-xs group-hover:bg-amber-900 group-hover:text-white transition-colors">
+                                باب فقهي
+                            </span>
+                            <span class="text-xs font-semibold text-stone-400">
+                                ${issues.length} ${issues.length === 1 ? "مسألة" : issues.length <= 10 ? "مسائل" : "مسألة"}
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-bold text-stone-900 mb-4 leading-snug group-hover:text-amber-950 transition-colors">
+                            ${chapterName}
+                        </h3>
+                        <ul class="space-y-2 mb-6 bg-stone-50 p-4 rounded-xl border border-stone-100">
+                            ${issuesListHTML}
+                        </ul>
+                    </div>
+                    <div class="pt-3 border-t border-stone-100 flex items-center justify-between">
+                        <a href="table.html" class="text-amber-800 text-xs font-bold flex items-center gap-1.5 hover:text-amber-950 transition">
+                            <span>استعراض المسائل في الجدول</span>
+                            <span aria-hidden="true">&larr;</span>
+                        </a>
+                        <a href="search.html" class="text-stone-400 hover:text-amber-800 text-xs font-semibold transition">
+                            بحث
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>

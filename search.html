@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تبيان | البحث الفقهي في كتاب الصلاة</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        mark {
+            background-color: #fef3c7;
+            color: #78350f;
+            padding: 0 3px;
+            border-radius: 4px;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- شريط التنقل العلوي -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="block">
+                    <span class="text-2xl font-black text-amber-950 tracking-wide">تبيان</span>
+                    <span class="block text-xs text-stone-500 font-semibold">الموسوعة الفقهية الأكاديمية</span>
+                </a>
+            </div>
+            <nav class="hidden md:flex items-center gap-8 font-semibold text-stone-600 text-sm">
+                <a href="index.html" class="hover:text-amber-900 transition">الرئيسية</a>
+                <a href="search.html" class="text-amber-900 font-bold border-b-2 border-amber-800 pb-1">البحث الفقهي</a>
+                <a href="table.html" class="hover:text-amber-900 transition">جدول المقارنات والمسائل</a>
+                <a href="dashboard.html" class="hover:text-amber-900 transition">لوحة المشرف</a>
+            </nav>
+            <div>
+                <a href="table.html" class="bg-amber-900 hover:bg-amber-950 text-white px-5 py-2.5 rounded-xl font-bold shadow-sm transition text-sm">
+                    جدول المسائل
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- ترويسة البحث (Search Hero) -->
+        <div class="relative bg-gradient-to-br from-stone-900 via-amber-950 to-stone-900 text-stone-100 py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+            <div class="absolute inset-0 opacity-5 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:20px_20px]"></div>
+            <div class="max-w-4xl mx-auto text-center relative z-10">
+                <span class="bg-amber-950/80 border border-amber-700/55 text-amber-200 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-4 inline-block shadow-sm">
+                    محرك الاستعلام الفقهي المقارن
+                </span>
+                <h1 class="text-3xl sm:text-5xl font-black tracking-tight mb-4 text-white">
+                    البحث في مسائل <span class="text-amber-400">كتاب الصلاة</span>
+                </h1>
+                <p class="text-stone-300 text-base sm:text-lg mb-8 max-w-2xl mx-auto">
+                    ابحث في عناوين المسائل، تحرير محل النزاع، أقوال الأئمة، الأدلة الشرعية، سبب الخلاف، والقول الراجح.
+                </p>
+
+                <!-- حقل البحث الرئيسي -->
+                <div class="max-w-2xl mx-auto relative">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="ابحث بكلمة مفتاحية (مثال: الوتر، ترك الصلاة، مالك، أبو حنيفة، حديث الإسراء)..." 
+                        class="w-full bg-white text-stone-900 placeholder-stone-400 px-6 py-4 pl-28 rounded-2xl shadow-xl border-2 border-transparent focus:border-amber-500 focus:outline-none text-base font-semibold transition"
+                    >
+                    <button 
+                        id="clearSearchBtn" 
+                        onclick="resetFilters()" 
+                        class="hidden absolute left-3 top-1/2 -translate-y-1/2 bg-stone-100 hover:bg-stone-200 text-stone-600 text-xs font-bold px-3 py-2 rounded-xl transition">
+                        مسح البحث
+                    </button>
+                </div>
+
+                <!-- خيارات نطاق البحث السريع -->
+                <div class="flex flex-wrap justify-center gap-2 mt-4 text-xs">
+                    <span class="text-stone-400 font-semibold py-1">نطاق البحث:</span>
+                    <button onclick="setSearchScope('all')" data-scope="all" class="scope-btn bg-amber-700 text-white px-3 py-1 rounded-lg font-bold transition">الكل</button>
+                    <button onclick="setSearchScope('title')" data-scope="title" class="scope-btn bg-stone-800/80 hover:bg-stone-800 text-stone-300 px-3 py-1 rounded-lg font-semibold transition">العنوان وتحرير النزاع</button>
+                    <button onclick="setSearchScope('opinions')" data-scope="opinions" class="scope-btn bg-stone-800/80 hover:bg-stone-800 text-stone-300 px-3 py-1 rounded-lg font-semibold transition">الأقوال والعلماء</button>
+                    <button onclick="setSearchScope('evidence')" data-scope="evidence" class="scope-btn bg-stone-800/80 hover:bg-stone-800 text-stone-300 px-3 py-1 rounded-lg font-semibold transition">الأدلة الشرعية</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم الفلاتر والنتائج -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            
+            <!-- شريط تصفية الجُمل والأبواب الفقهية (قائمة منسدلة أنيقة في سطر واحد) -->
+            <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-stone-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3 flex-grow">
+                    <label for="chapterSelect" class="text-xs font-black text-stone-700 shrink-0">
+                        تصفية حسب الجملة / الباب:
+                    </label>
+                    <div class="relative flex-grow max-w-2xl">
+                        <select 
+                            id="chapterSelect" 
+                            class="w-full appearance-none bg-stone-50 hover:bg-stone-100/80 text-stone-800 text-xs sm:text-sm font-bold px-4 py-3 pl-10 rounded-xl border border-stone-200 focus:border-amber-700 focus:bg-white focus:outline-none transition cursor-pointer">
+                            <!-- يتم تعبئة الخيارات تلقائياً من data.js -->
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-stone-500">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- عداد النتائج وزر إعادة الضبط -->
+                <div class="flex items-center justify-between md:justify-end gap-4 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-stone-100">
+                    <div class="text-sm text-stone-500 font-semibold">
+                        المسائل المطابقة: <span id="resultsCount" class="text-amber-900 font-black text-base">0</span>
+                    </div>
+                    <button 
+                        id="resetAllBtn"
+                        onclick="resetFilters()" 
+                        class="hidden text-xs font-bold text-amber-800 hover:text-amber-950 bg-amber-50 hover:bg-amber-100 px-3 py-2 rounded-lg transition">
+                        إعادة ضبط
+                    </button>
+                </div>
+            </div>
+
+            <!-- تنبيه في حال عدم وجود ملف data.js -->
+            <div id="dataErrorState" class="hidden text-center py-12 bg-red-50 rounded-2xl border border-red-200 mt-8 px-4">
+                <h3 class="text-lg font-black text-red-900 mb-1">تعذر قراءة مصفوفة البيانات (fiqhData)</h3>
+                <p class="text-red-700 text-sm">تأكد من وجود ملف <code class="font-bold">data.js</code> في نفس المجلد وأنه يحتوي على المتغير <code class="font-bold">const fiqhData = [...]</code>.</p>
+            </div>
+
+            <!-- شبكة عرض النتائج -->
+            <div id="resultsContainer" class="space-y-8 mt-8">
+                <!-- يتم توليد البطاقات الأكاديمية تلقائياً -->
+            </div>
+
+            <!-- رسالة عدم وجود نتائج -->
+            <div id="emptyState" class="hidden text-center py-20 bg-white rounded-2xl border border-stone-200/80 mt-8">
+                <span class="inline-block bg-amber-50 text-amber-800 text-xs font-bold px-3 py-1 rounded-md mb-3">لا توجد مطابقة</span>
+                <h3 class="text-xl font-black text-stone-900 mb-2">لم يتم العثور على مسائل مطابقة لبحثك</h3>
+                <p class="text-stone-500 text-sm mb-6">حاول البحث بكلمة أخرى أو اختر "جميع الجُمل والأبواب" ونطاق "الكل".</p>
+                <button onclick="resetFilters()" class="bg-amber-900 hover:bg-amber-950 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition">
+                    إعادة ضبط البحث
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- التذييل (Footer) -->
+    <footer class="bg-stone-900 text-stone-400 border-t border-stone-800 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-sm">
+            <p>منصة <span class="font-bold text-stone-200">تبيان</span> الأكاديمية الفقهية © 2026</p>
+            <p class="mt-2 sm:mt-0">مرتبط بقاعدة بيانات MySQL وملف البيانات الموحد <code class="text-stone-300">data.js</code></p>
+        </div>
+    </footer>
+
+    <!-- استدعاء ملف البيانات الموحد قبل سكربت الصفحة -->
+    <script src="data.js"></script>
+
+    <!-- المنطق البرمجي للبحث والتصفية -->
+    <script>
+        const isDataLoaded = typeof fiqhData !== 'undefined' && Array.isArray(fiqhData);
+        const dataset = isDataLoaded ? fiqhData : [];
+
+        let activeChapter = 'all';
+        let activeScope = 'all';
+        let searchQuery = '';
+
+        // قراءة معامل الباب من الرابط إن وجد (?chapter=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('chapter')) {
+            activeChapter = urlParams.get('chapter');
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        const resetAllBtn = document.getElementById('resetAllBtn');
+        const chapterSelect = document.getElementById('chapterSelect');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const resultsCount = document.getElementById('resultsCount');
+        const emptyState = document.getElementById('emptyState');
+        const dataErrorState = document.getElementById('dataErrorState');
+
+        // 1. تعبئة القائمة المنسدلة للجُمل/الأبواب مع عدد مسائل كل باب
+        function buildChapterSelect() {
+            const chapterCounts = {};
+            dataset.forEach(item => {
+                if (item.chapter) {
+                    chapterCounts[item.chapter] = (chapterCounts[item.chapter] || 0) + 1;
+                }
+            });
+
+            const chapters = Object.keys(chapterCounts);
+            
+            let optionsHtml = `<option value="all">جميع الجُمل والأبواب (${dataset.length} مسألة)</option>`;
+            optionsHtml += chapters.map(chap => {
+                const selected = chap === activeChapter ? 'selected' : '';
+                return `<option value="${chap.replace(/"/g, '&quot;')}" ${selected}>${chap} (${chapterCounts[chap]})</option>`;
+            }).join('');
+
+            chapterSelect.innerHTML = optionsHtml;
+        }
+
+        // 2. الاستماع لتغيير القائمة المنسدلة
+        chapterSelect.addEventListener('change', (e) => {
+            activeChapter = e.target.value;
+            updateResetVisibility();
+            renderResults();
+        });
+
+        // 3. تغيير نطاق البحث (الكل / العنوان / الأقوال / الأدلة)
+        function setSearchScope(scope) {
+            activeScope = scope;
+            document.querySelectorAll('.scope-btn').forEach(btn => {
+                if (btn.dataset.scope === scope) {
+                    btn.className = 'scope-btn bg-amber-700 text-white px-3 py-1 rounded-lg font-bold transition';
+                } else {
+                    btn.className = 'scope-btn bg-stone-800/80 hover:bg-stone-800 text-stone-300 px-3 py-1 rounded-lg font-semibold transition';
+                }
+            });
+            updateResetVisibility();
+            renderResults();
+        }
+
+        // 4. الاستماع للكتابة في مربع البحث
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.trim().toLowerCase();
+            clearSearchBtn.classList.toggle('hidden', searchQuery === '');
+            updateResetVisibility();
+            renderResults();
+        });
+
+        // إظهار أو إخفاء زر إعادة الضبط العام
+        function updateResetVisibility() {
+            const hasFilter = activeChapter !== 'all' || activeScope !== 'all' || searchQuery !== '';
+            resetAllBtn.classList.toggle('hidden', !hasFilter);
+        }
+
+        // 5. إعادة ضبط الفلاتر
+        function resetFilters() {
+            searchInput.value = '';
+            searchQuery = '';
+            activeChapter = 'all';
+            chapterSelect.value = 'all';
+            clearSearchBtn.classList.add('hidden');
+            setSearchScope('all');
+            updateResetVisibility();
+            renderResults();
+        }
+
+        // 6. تمييز الكلمة المبحوث عنها داخل النص (Highlight)
+        function highlightText(text) {
+            if (!text) return '';
+            const str = String(text);
+            if (!searchQuery) return str;
+            const escaped = searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            return str.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
+        }
+
+        // 7. تصفية وعرض المسائل الفقهية
+        function renderResults() {
+            if (!isDataLoaded) {
+                dataErrorState.classList.remove('hidden');
+                return;
+            }
+
+            const filtered = dataset.filter(issue => {
+                const matchesChapter = activeChapter === 'all' || issue.chapter === activeChapter;
+                if (!matchesChapter) return false;
+                if (!searchQuery) return true;
+
+                const inTitle = 
+                    String(issue.id).includes(searchQuery) ||
+                    (issue.title && issue.title.toLowerCase().includes(searchQuery)) ||
+                    (issue.tahrir_mahal_alkhilaf && issue.tahrir_mahal_alkhilaf.toLowerCase().includes(searchQuery));
+
+                const inOpinions = Array.isArray(issue.opinions) && issue.opinions.some(op => 
+                    (op.opinion_number && op.opinion_number.toLowerCase().includes(searchQuery)) ||
+                    (op.statement && op.statement.toLowerCase().includes(searchQuery)) ||
+                    (op.scholars && op.scholars.toLowerCase().includes(searchQuery)) ||
+                    (op.fruit && op.fruit.toLowerCase().includes(searchQuery))
+                );
+
+                const inEvidence = Array.isArray(issue.opinions) && issue.opinions.some(op => 
+                    Array.isArray(op.evidence) && op.evidence.some(ev => ev.toLowerCase().includes(searchQuery))
+                );
+
+                const inOther = 
+                    (issue.chapter && issue.chapter.toLowerCase().includes(searchQuery)) ||
+                    (issue.cause_of_dispute && issue.cause_of_dispute.toLowerCase().includes(searchQuery)) ||
+                    (issue.preponderant_opinion && issue.preponderant_opinion.toLowerCase().includes(searchQuery)) ||
+                    (issue.references && issue.references.toLowerCase().includes(searchQuery));
+
+                if (activeScope === 'title') return inTitle;
+                if (activeScope === 'opinions') return inOpinions;
+                if (activeScope === 'evidence') return inEvidence;
+                return inTitle || inOpinions || inEvidence || inOther;
+            });
+
+            resultsCount.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                resultsContainer.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            resultsContainer.innerHTML = filtered.map(issue => `
+                <article class="bg-white p-7 sm:p-8 rounded-2xl shadow-sm border border-stone-200/80 hover:border-amber-700/70 transition">
+                    <!-- رأس البطاقة: الباب ورقم المسألة -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-4 border-b border-stone-100">
+                        <span class="bg-amber-50 text-amber-900 border border-amber-200/80 text-xs font-bold px-3.5 py-1.5 rounded-lg">
+                            ${highlightText(issue.chapter)}
+                        </span>
+                        <span class="text-xs font-black text-stone-500 bg-stone-100 px-3 py-1 rounded-md">
+                            مسألة رقم #${issue.id}
+                        </span>
+                    </div>
+
+                    <!-- عنوان المسألة -->
+                    <h2 class="text-2xl font-black text-stone-900 mb-4 leading-snug">
+                        ${highlightText(issue.title)}
+                    </h2>
+
+                    <!-- تحرير محل الخلاف -->
+                    ${issue.tahrir_mahal_alkhilaf ? `
+                        <div class="bg-stone-50 border-r-4 border-stone-400 p-4 rounded-l-xl mb-6">
+                            <span class="block text-xs font-bold text-stone-500 mb-1">تحرير محل الخلاف:</span>
+                            <p class="text-sm font-semibold text-stone-800 leading-relaxed">${highlightText(issue.tahrir_mahal_alkhilaf)}</p>
+                        </div>
+                    ` : ''}
+
+                    <!-- الأقوال الفقهية والأدلة -->
+                    ${Array.isArray(issue.opinions) && issue.opinions.length > 0 ? `
+                        <div class="grid grid-cols-1 ${issue.opinions.length > 1 ? 'lg:grid-cols-2' : ''} gap-5 mb-6">
+                            ${issue.opinions.map(op => `
+                                <div class="border border-stone-200 rounded-xl p-5 bg-stone-50/40 flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                                            <span class="text-xs font-black text-amber-900 bg-amber-100/80 px-2.5 py-0.5 rounded">
+                                                ${highlightText(op.opinion_number)}
+                                            </span>
+                                            <span class="text-xs font-bold text-stone-600">
+                                                ${highlightText(op.scholars)}
+                                            </span>
+                                        </div>
+                                        
+                                        <p class="text-sm font-bold text-stone-900 mb-3 leading-relaxed">
+                                            ${highlightText(op.statement)}
+                                        </p>
+                                        
+                                        ${Array.isArray(op.evidence) && op.evidence.length > 0 ? `
+                                            <div class="mb-3 bg-white p-3.5 rounded-lg border border-stone-200/70">
+                                                <span class="block text-[11px] font-bold text-amber-900 mb-1.5">الأدلة الشرعية:</span>
+                                                <ul class="list-disc list-inside space-y-1.5 text-xs text-stone-700 leading-relaxed">
+                                                    ${op.evidence.map(ev => `<li>${highlightText(ev)}</li>`).join('')}
+                                                </ul>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+
+                                    ${op.fruit ? `
+                                        <p class="text-xs text-stone-700 bg-amber-50/50 p-2.5 rounded-lg border border-amber-200/60 mt-2">
+                                            <strong class="text-amber-950">ثمرة الخلاف:</strong> ${highlightText(op.fruit)}
+                                        </p>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    <!-- سبب الخلاف والقول الراجح -->
+                    <div class="space-y-3 mb-5">
+                        ${issue.cause_of_dispute ? `
+                            <div class="text-sm text-stone-700 leading-relaxed bg-stone-50/80 p-3.5 rounded-xl border border-stone-200/60">
+                                <span class="font-bold text-stone-900">سبب الخلاف: </span>${highlightText(issue.cause_of_dispute)}
+                            </div>
+                        ` : ''}
+                        
+                        ${issue.preponderant_opinion ? `
+                            <div class="bg-amber-50/70 border border-amber-200/80 p-4 rounded-xl text-sm text-stone-800 leading-relaxed">
+                                <span class="font-black text-amber-950 block mb-1">القول الراجح والتوجيه:</span>
+                                ${highlightText(issue.preponderant_opinion)}
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- المصادر ورابط المقارنة التفصيلية -->
+                    <div class="pt-4 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <p class="text-xs text-stone-500 leading-relaxed">
+                            <strong class="text-stone-700">المصادر:</strong> ${highlightText(issue.references || 'غير محدد')}
+                        </p>
+                        <a href="table.html?id=${issue.id}" class="shrink-0 bg-amber-900 hover:bg-amber-950 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition text-center">
+                            عرض في جدول المقارنة &larr;
+                        </a>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // التهيئة الأولية
+        buildChapterSelect();
+        updateResetVisibility();
+        renderResults();
+    </script>
+</body>
+</html>
